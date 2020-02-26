@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/rates_item_margin">
+
+    <ImageView
+        android:id="@+id/rate_image"
+        android:layout_width="@dimen/rates_image_width"
+        android:layout_height="@dimen/rates_image_height"
+        android:layout_marginEnd="@dimen/rates_item_image_margin_right"
+        android:contentDescription="@string/rate_image_content_description"
+        tools:src="@drawable/ic_rate_us_image"/>
+
+    <TextView
+        android:id="@+id/rate_short_text"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:textSize="@dimen/rates_short_rate_name_text_size"
+        android:textColor="@color/rates_short_text_color"
+        android:layout_toEndOf="@+id/rate_image"
+        tools:text="USD"/>
+
+    <TextView
+        android:id="@+id/rate_text"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/rates_item_short_text_height"
+        android:textSize="@dimen/rates_long_rate_name_text_size"
+        android:textColor="@color/rates_long_text_color"
+        android:layout_toEndOf="@+id/rate_image"
+        android:layout_below="@+id/rate_short_text"
+        tools:text="US Dollar"/>
+
+    <EditText
+        android:id="@+id/rate_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/rates_rate_value_size"
+        android:textColor="@color/rates_rate_value_color"
+        android:layout_alignParentEnd="true"
+        android:inputType="number"
+        android:maxLength="10"
+        android:hint="0"
+        tools:text="1183.06" />
+</RelativeLayout>

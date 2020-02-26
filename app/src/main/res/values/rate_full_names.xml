@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="rates_aud">Australian dollar</string>
+    <string name="rates_bgn">Bulgarian lev</string>
+    <string name="rates_brl">Brazilian real</string>
+    <string name="rates_cad">Canadian dollar</string>
+    <string name="rates_chf">Swiss franc</string>
+    <string name="rates_cny">Chinese yuan</string>
+    <string name="rates_czk">Czech koruna</string>
+    <string name="rates_dkk">Danish krone</string>
+    <string name="rates_eur">Euro</string>
+    <string name="rates_gbp">Pound sterling</string>
+    <string name="rates_hkd">Hong Kong dollar</string>
+    <string name="rates_hrk">Croatian kuna</string>
+    <string name="rates_huf">Hungarian forint</string>
+    <string name="rates_idr">Indonesian rupiah</string>
+    <string name="rates_ils">Israeli new shekel</string>
+    <string name="rates_inr">Indian rupee</string>
+    <string name="rates_isk">Icelandic króna</string>
+    <string name="rates_jpy">Japanese yen</string>
+    <string name="rates_krw">South Korean won</string>
+    <string name="rates_mxn">Mexican peso</string>
+    <string name="rates_myr">Malaysian ringgit</string>
+    <string name="rates_nok">Norwegian krone</string>
+    <string name="rates_nzd">New Zealand dollar</string>
+    <string name="rates_php">Philippine peso</string>
+    <string name="rates_pln">Polish złoty</string>
+    <string name="rates_ron">Romanian leu</string>
+    <string name="rates_rub">Russian ruble</string>
+    <string name="rates_sek">Swedish krona</string>
+    <string name="rates_sgd">Singapore dollar</string>
+    <string name="rates_thb">Thai baht</string>
+    <string name="rates_usd">US dollar</string>
+    <string name="rates_zar">South African rand</string>
+    <string name="rates_unknown">Unknown</string>
+</resources>

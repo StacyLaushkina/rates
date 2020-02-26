@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="rates_image_height">40dp</dimen>
+    <dimen name="rates_image_width">@dimen/rates_image_height</dimen>
+    <dimen name="rates_title_vertical_margin">16dp</dimen>
+    <dimen name="rates_title_horizontal_margin">72dp</dimen>
+    <dimen name="rates_item_margin">16dp</dimen>
+    <dimen name="rates_item_image_margin_right">16dp</dimen>
+    <dimen name="rates_item_short_text_height">20dp</dimen>
+
+    <dimen name="rates_big_text">20sp</dimen>
+    <dimen name="rates_title_size">@dimen/rates_big_text</dimen>
+    <dimen name="rates_rate_value_size">@dimen/rates_big_text</dimen>
+    <dimen name="rates_short_rate_name_text_size">16sp</dimen>
+    <dimen name="rates_long_rate_name_text_size">14sp</dimen>
+</resources>
