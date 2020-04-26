@@ -9,7 +9,7 @@ class RateFullName {
     companion object {
         private const val TAG = "[RateFullName]"
 
-        fun getFullName(@RateShortName.Name shortName: String): Pair<Int, Int> {
+        fun getFullName(shortName: RateShortName): Pair<Int, Int> {
             return when (shortName) {
                 RateShortName.AUD -> Pair(R.string.rates_aud, R.drawable.ic_rate_aud_image)
                 RateShortName.BGN -> Pair(R.string.rates_bgn, R.drawable.ic_rate_bgn_image)

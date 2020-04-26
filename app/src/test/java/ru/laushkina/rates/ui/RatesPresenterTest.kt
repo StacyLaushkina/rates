@@ -3,6 +3,7 @@ package ru.laushkina.rates.ui
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import com.nhaarman.mockitokotlin2.*
+import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import junit.framework.Assert.*
@@ -34,7 +35,7 @@ class RatesPresenterTest {
 
     @Test
     fun `discard periodic update and request immediate rates update when new one is selected `() {
-        doReturn(mock<Single<List<Rate>>>()).`when`(service).loadRates(any())
+        doReturn(mock<Maybe<List<Rate>>>()).`when`(service).loadRates(any())
 
         val rate = RateViewModel(1, 2, "1", 10f, true)
         presenter.onRateSelected(rate)
@@ -71,11 +72,11 @@ class RatesPresenterTest {
         presenter.currentRates = mutableListOf(rate1, rate2)
         presenter.onRateValueChange(rate1, "")
 
-        val ratesCaptor = ArgumentCaptor.forClass(MutableList::class.java) as ArgumentCaptor<List<RateViewModel>>
+        val ratesCaptor = argumentCaptor<MutableList<RateViewModel>>()
         verify(view).showRates(ratesCaptor.capture())
 
-        assertFalse(ratesCaptor.value[0].showAmount())
-        assertFalse(ratesCaptor.value[1].showAmount())
+        assertFalse(ratesCaptor.value[0].showAmount)
+        assertFalse(ratesCaptor.value[1].showAmount)
     }
 
     @Test
@@ -86,11 +87,11 @@ class RatesPresenterTest {
         presenter.currentRates = mutableListOf(rate1, rate2)
         presenter.onRateValueChange(rate1, "0")
 
-        val ratesCaptor = ArgumentCaptor.forClass(MutableList::class.java) as ArgumentCaptor<List<RateViewModel>>
+        val ratesCaptor = argumentCaptor<MutableList<RateViewModel>>()
         verify(view).showRates(ratesCaptor.capture())
 
-        assertFalse(ratesCaptor.value[0].showAmount())
-        assertFalse(ratesCaptor.value[1].showAmount())
+        assertFalse(ratesCaptor.value[0].showAmount)
+        assertFalse(ratesCaptor.value[1].showAmount)
     }
 
     @Test
@@ -101,12 +102,12 @@ class RatesPresenterTest {
         presenter.currentRates = mutableListOf(rate1, rate2)
         presenter.onRateValueChange(rate1, "10")
 
-        val ratesCaptor = ArgumentCaptor.forClass(MutableList::class.java) as ArgumentCaptor<List<RateViewModel>>
+        val ratesCaptor = argumentCaptor<MutableList<RateViewModel>>()
         verify(view).showRates(ratesCaptor.capture())
 
-        assertTrue(ratesCaptor.value[0].showAmount())
+        assertTrue(ratesCaptor.value[0].showAmount)
         assertEquals(10f, ratesCaptor.value[0].amount)
-        assertTrue(ratesCaptor.value[1].showAmount())
+        assertTrue(ratesCaptor.value[1].showAmount)
         assertEquals(200f, ratesCaptor.value[1].amount)
     }
 
@@ -118,12 +119,14 @@ class RatesPresenterTest {
         presenter.currentRates = mutableListOf(rate1, rate2)
         presenter.onRateValueChange(rate1, "10")
 
-        val ratesCaptor = ArgumentCaptor.forClass(MutableList::class.java) as ArgumentCaptor<List<RateViewModel>>
+        val ratesCaptor = argumentCaptor<MutableList<RateViewModel>>()
         verify(view).showRates(ratesCaptor.capture())
 
-        assertTrue(ratesCaptor.value[0].showAmount())
+        assertTrue(ratesCaptor.value[0].showAmount)
         assertEquals(10f, ratesCaptor.value[0].amount)
-        assertTrue(ratesCaptor.value[1].showAmount())
+        assertTrue(ratesCaptor.value[1].showAmount)
         assertEquals(2f, ratesCaptor.value[1].amount)
     }
+
+    private inline fun <reified T : Any> argumentCaptor() = ArgumentCaptor.forClass(T::class.java)
 }
