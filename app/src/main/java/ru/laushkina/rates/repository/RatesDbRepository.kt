@@ -8,7 +8,7 @@ import java.util.*
 
 //TODO datasource
 class RatesDbRepository(context: Context): RatesRepository {
-    private val ratesDatabase: RatesDatabase = RatesDatabase.getInstance(context)
+    private val ratesDatabase: RatesDatabase = RatesDatabase.create(context)
 
     override fun save(rates: List<Rate>?) {
         ratesDatabase.transactionExecutor.execute {

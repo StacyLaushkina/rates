@@ -39,7 +39,7 @@ class RatesPresenter(private val ratesService: RatesService,
     }
 
     fun onCreate() {
-        cacheDisposable = RatesInMemoryCache.getInstance().getCachedRates().subscribe(
+        cacheDisposable = RatesInMemoryCache.INSTANCE.getCachedRates().subscribe(
                 { rates: List<Rate> -> this.onRatesLoaded(rates) },
                 ratesView::showError)
         loadDisposable = ratesService.initRatesCache()

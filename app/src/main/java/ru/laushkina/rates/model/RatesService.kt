@@ -26,7 +26,7 @@ open class RatesService(private val ratesRepository: RatesRepository) {
                     if (rates.isEmpty()) {
                         requestRatesLoad()
                     } else {
-                        RatesInMemoryCache.getInstance().setCachedRates(rates)
+                        RatesInMemoryCache.INSTANCE.setCachedRates(rates)
                     }
                 }
                 .subscribe()
@@ -59,7 +59,7 @@ open class RatesService(private val ratesRepository: RatesRepository) {
                 .doAfterSuccess { rates: List<Rate>? -> ratesRepository.save(rates) } // Non UI thread
                 .observeOn(AndroidSchedulers.mainThread())
                 .doAfterSuccess { rates: List<Rate>? ->
-                    RatesInMemoryCache.getInstance().setCachedRates(rates) // UI thread
+                    RatesInMemoryCache.INSTANCE.setCachedRates(rates) // UI thread
                     compositeDisposable.dispose()
                 }
                 .doOnError { throwable: Throwable? -> RatesLog.e(TAG, "Error in rates download", throwable!!) }

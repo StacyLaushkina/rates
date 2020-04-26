@@ -9,20 +9,10 @@ import androidx.room.RoomDatabase
 abstract class RatesDatabase: RoomDatabase() {
     companion object {
         private const val NAME = "rates_database"
-        private val lock = Any()
-        @Volatile
-        private var instance: RatesDatabase? = null
 
-        // TODO factory
-        fun getInstance(context: Context): RatesDatabase {
-            if (instance == null) {
-                synchronized(lock) {
-                    if (instance == null) {
-                        instance = Room.databaseBuilder(context, RatesDatabase::class.java, NAME).build()
-                    }
-                }
-            }
-            return instance!!
+        fun create(context: Context): RatesDatabase {
+            return Room.databaseBuilder(context, RatesDatabase::class.java, NAME).build()
+
         }
     }
 

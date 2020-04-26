@@ -39,7 +39,6 @@ class RatesActivity: Activity(), RatesView, ValueChangeListener {
         itemClickDisposable.dispose()
     }
 
-
     override fun getAppContext(): Context {
         return applicationContext
     }

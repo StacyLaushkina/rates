@@ -8,22 +8,7 @@ class RatesInMemoryCache {
     private val observable: Subject<List<Rate>> = PublishSubject.create()
 
     companion object {
-        private val lock = Any()
-
-        @Volatile
-        private var INSTANCE: RatesInMemoryCache? = null
-
-        // TODO
-        fun getInstance(): RatesInMemoryCache {
-            if (INSTANCE == null) {
-                synchronized(lock) {
-                    if (INSTANCE == null) {
-                        INSTANCE = RatesInMemoryCache()
-                    }
-                }
-            }
-            return INSTANCE!!
-        }
+        val INSTANCE: RatesInMemoryCache by lazy { RatesInMemoryCache() }
     }
 
     fun getCachedRates(): Subject<List<Rate>> {
