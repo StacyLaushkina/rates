@@ -1,9 +1,9 @@
-package ru.laushkina.rates.repository
+package ru.laushkina.rates.data
 
 import io.reactivex.Maybe
 import ru.laushkina.rates.model.Rate
 
-interface RatesRepository {
+interface RatesDataSource {
     fun save(rates: List<Rate>?)
 
     fun getRates(): Maybe<List<Rate>>

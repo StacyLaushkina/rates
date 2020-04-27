@@ -9,12 +9,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.work.WorkManager
 import io.reactivex.disposables.Disposable
 import ru.laushkina.rates.R
+import ru.laushkina.rates.data.RatesDependencyOperator
 import ru.laushkina.rates.model.RatesService
-import ru.laushkina.rates.repository.RatesDbRepository
 import ru.laushkina.rates.ui.RateAdapter.ValueChangeListener
 import ru.laushkina.rates.util.RatesLog
 
-class RatesActivity: Activity(), RatesView, ValueChangeListener {
+class RatesActivity : Activity(), RatesView, ValueChangeListener {
     companion object {
         private const val TAG = "RatesActivity"
     }
@@ -28,7 +28,12 @@ class RatesActivity: Activity(), RatesView, ValueChangeListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_rates)
         ratesRecycler = findViewById(R.id.rates)
-        val service = RatesService(RatesDbRepository(getAppContext()))
+        val service = RatesService(
+                RatesDependencyOperator.getDBDataSource(getAppContext()),
+                RatesDependencyOperator.getNetworkDataSource(),
+                RatesDependencyOperator.getInMemoryDataSource()
+        )
+
         ratesPresenter = RatesPresenter(service, WorkManager.getInstance(getAppContext()), this)
         ratesPresenter.onCreate()
     }
@@ -59,7 +64,7 @@ class RatesActivity: Activity(), RatesView, ValueChangeListener {
     }
 
     override fun showError(throwable: Throwable) {
-        RatesLog.e(TAG, "", throwable)
+        RatesLog.e(TAG, "Common error", throwable)
         Toast.makeText(this, "Cannot update rates: " + throwable.message, Toast.LENGTH_LONG).show()
     }
 

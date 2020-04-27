@@ -1,4 +1,4 @@
-package ru.laushkina.rates.network
+package ru.laushkina.rates.data.network
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

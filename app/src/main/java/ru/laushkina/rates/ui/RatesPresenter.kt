@@ -10,8 +10,7 @@ import io.reactivex.disposables.Disposable
 import ru.laushkina.rates.model.Rate
 import ru.laushkina.rates.model.RateShortName
 import ru.laushkina.rates.model.RatesService
-import ru.laushkina.rates.network.RatesLoadWorker
-import ru.laushkina.rates.repository.RatesInMemoryCache
+import ru.laushkina.rates.data.network.RatesLoadWorker
 import ru.laushkina.rates.ui.RateFullName.Companion.getFullName
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -21,10 +20,8 @@ class RatesPresenter(private val ratesService: RatesService,
                      private val ratesView: RatesView) {
 
     @VisibleForTesting
-    var loadDisposable: Disposable? = null
+    var initializeDisposable: Disposable? = null
 
-    @VisibleForTesting
-    var cacheDisposable: Disposable? = null
     private var baseRate: RateShortName? = null
 
     @VisibleForTesting
@@ -39,25 +36,24 @@ class RatesPresenter(private val ratesService: RatesService,
     }
 
     fun onCreate() {
-        cacheDisposable = RatesInMemoryCache.INSTANCE.getCachedRates().subscribe(
-                { rates: List<Rate> -> this.onRatesLoaded(rates) },
-                ratesView::showError)
-        loadDisposable = ratesService.initRatesCache()
+        initializeDisposable = ratesService.initialize().subscribe(
+                {
+                    rates: List<Rate> -> this.onRatesLoaded(rates)
+                },
+                ratesView::showError
+        )
     }
 
     fun onDestroy() {
-        disposeLoad()
-        cacheDisposable?.dispose()
+        initializeDisposable?.dispose()
     }
 
     fun onRateSelected(selectedRate: RateViewModel) {
-        synchronized(this) {
-            baseRate = RateShortName.parse(selectedRate.shortName)
-        }
+        baseRate = RateShortName.parse(selectedRate.shortName)
     }
 
     fun beforeRateValueChange() {
-        disposeLoad()
+        // TODO Looks like not needed anymore
         workManager.cancelAllWorkByTag(RatesLoadWorker.TAG)
     }
 
@@ -92,9 +88,8 @@ class RatesPresenter(private val ratesService: RatesService,
         return updatedValues
     }
 
-    private fun onRatesLoaded(rates: List<Rate>?) {
-        disposeLoad()
-        if (rates == null) return
+    private fun onRatesLoaded(rates: List<Rate>) {
+        if (rates.isEmpty()) return
 
         val baseRate = rates[0]
         this.baseRate = baseRate.shortName
@@ -112,8 +107,8 @@ class RatesPresenter(private val ratesService: RatesService,
         for (rate in rates) {
             nameImagePair = getFullName(rate.shortName)
             result.add(RateViewModel(
-                    nameImagePair.second!!,
-                    nameImagePair.first!!,
+                    nameImagePair.second,
+                    nameImagePair.first,
                     rate.shortName.name,
                     multiplier * rate.amount,
                     !emptyAllRateValues))
@@ -130,9 +125,4 @@ class RatesPresenter(private val ratesService: RatesService,
                 .build()
         workManager.enqueue(mRequest)
     }
-
-    private fun disposeLoad() {
-        loadDisposable?.dispose()
-    }
-
 }

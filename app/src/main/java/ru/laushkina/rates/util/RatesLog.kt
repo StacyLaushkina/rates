@@ -17,7 +17,7 @@ class RatesLog {
             }
         }
 
-        fun e(tag: String, message: String, throwable: Throwable) {
+        fun e(tag: String, message: String, throwable: Throwable?) {
             if (BuildConfig.DEBUG) {
                 Log.e(tag, message, throwable)
             }

@@ -1,4 +1,4 @@
-package ru.laushkina.rates.network
+package ru.laushkina.rates.data.network
 
 import ru.laushkina.rates.model.Rate
 import ru.laushkina.rates.model.RateShortName
@@ -6,9 +6,9 @@ import java.util.*
 
 class RatesMapper {
     companion object {
-        fun mapToRates(response: RatesResponse?): List<Rate>? {
+        fun mapToRates(response: RatesResponse?): List<Rate> {
             if (response?.Rates == null) {
-                return null
+                return listOf()
             }
 
             val result: MutableList<Rate> = ArrayList<Rate>()

@@ -1,4 +1,4 @@
-package ru.laushkina.rates.repository
+package ru.laushkina.rates.data.database
 
 import android.content.Context
 import androidx.room.Database

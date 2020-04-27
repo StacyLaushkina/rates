@@ -1,4 +1,4 @@
-package ru.laushkina.rates.repository
+package ru.laushkina.rates.data.database
 
 import androidx.room.Dao
 import androidx.room.Insert

@@ -1,4 +1,4 @@
-package ru.laushkina.rates.network
+package ru.laushkina.rates.data.network
 
 import com.google.gson.annotations.SerializedName
 

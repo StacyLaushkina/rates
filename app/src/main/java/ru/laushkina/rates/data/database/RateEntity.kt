@@ -1,4 +1,4 @@
-package ru.laushkina.rates.repository
+package ru.laushkina.rates.data.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -8,7 +8,7 @@ import java.util.*
 @Entity(tableName = "rates")
 class RateEntity(
         @PrimaryKey(autoGenerate = true) val id: Int,
-        public val shortName: String,
+        val shortName: String,
         val amount: Float,
         val isBase: Boolean) {
 

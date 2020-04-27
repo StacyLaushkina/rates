@@ -1,13 +1,14 @@
-package ru.laushkina.rates.repository
+package ru.laushkina.rates.data.database
 
 import android.content.Context
 import io.reactivex.Maybe
+import ru.laushkina.rates.data.RatesDataSource
 import ru.laushkina.rates.model.Rate
 import ru.laushkina.rates.model.RateShortName.Companion.parse
+import ru.laushkina.rates.data.database.RatesDatabase
 import java.util.*
 
-//TODO datasource
-class RatesDbRepository(context: Context): RatesRepository {
+class RatesDBDataSource(context: Context): RatesDataSource {
     private val ratesDatabase: RatesDatabase = RatesDatabase.create(context)
 
     override fun save(rates: List<Rate>?) {

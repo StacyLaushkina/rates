@@ -1,4 +1,4 @@
-package ru.laushkina.rates.network
+package ru.laushkina.rates.data.network
 
 import io.reactivex.Maybe
 import retrofit2.http.GET
