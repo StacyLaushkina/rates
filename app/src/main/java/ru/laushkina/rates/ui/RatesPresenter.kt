@@ -37,9 +37,7 @@ class RatesPresenter(private val ratesService: RatesService,
 
     fun onCreate() {
         initializeDisposable = ratesService.initialize().subscribe(
-                {
-                    rates: List<Rate> -> this.onRatesLoaded(rates)
-                },
+                { rates: List<Rate> -> this.onRatesLoaded(rates) },
                 ratesView::showError
         )
     }
@@ -49,6 +47,7 @@ class RatesPresenter(private val ratesService: RatesService,
     }
 
     fun onRateSelected(selectedRate: RateViewModel) {
+        // TODO Must be used in next sync, but is not
         baseRate = RateShortName.parse(selectedRate.shortName)
     }
 
@@ -58,6 +57,7 @@ class RatesPresenter(private val ratesService: RatesService,
     }
 
     fun afterRateValueChange() {
+        // TODO Looks like not needed anymore
         scheduleNextUpdate()
     }
 

@@ -4,10 +4,8 @@ import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import io.reactivex.disposables.Disposable
-import ru.laushkina.rates.data.RatesDependencyOperator
-import ru.laushkina.rates.model.Rate
+import ru.laushkina.rates.RatesDependencyOperator
 import ru.laushkina.rates.model.RatesService
-import ru.laushkina.rates.data.database.RatesDBDataSource
 import ru.laushkina.rates.util.RatesLog
 
 class RatesLoadWorker(context: Context, params: WorkerParameters): Worker(context, params) {
@@ -26,11 +24,7 @@ class RatesLoadWorker(context: Context, params: WorkerParameters): Worker(contex
         }
 
         RatesLog.d(TAG, "Started downloading rates for: $baseRate")
-        val service = RatesService(
-                RatesDependencyOperator.getDBDataSource(applicationContext),
-                RatesDependencyOperator.getNetworkDataSource(),
-                RatesDependencyOperator.getInMemoryDataSource()
-        )
+        val service = RatesDependencyOperator.getRatesService(applicationContext)
 
         loadDismissible = service
                 .loadRatesFromNetwork(baseRate)

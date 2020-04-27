@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.work.WorkManager
 import io.reactivex.disposables.Disposable
 import ru.laushkina.rates.R
-import ru.laushkina.rates.data.RatesDependencyOperator
+import ru.laushkina.rates.RatesDependencyOperator
 import ru.laushkina.rates.model.RatesService
 import ru.laushkina.rates.ui.RateAdapter.ValueChangeListener
 import ru.laushkina.rates.util.RatesLog
@@ -28,11 +28,7 @@ class RatesActivity : Activity(), RatesView, ValueChangeListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_rates)
         ratesRecycler = findViewById(R.id.rates)
-        val service = RatesService(
-                RatesDependencyOperator.getDBDataSource(getAppContext()),
-                RatesDependencyOperator.getNetworkDataSource(),
-                RatesDependencyOperator.getInMemoryDataSource()
-        )
+        val service = RatesDependencyOperator.getRatesService(getAppContext())
 
         ratesPresenter = RatesPresenter(service, WorkManager.getInstance(getAppContext()), this)
         ratesPresenter.onCreate()
