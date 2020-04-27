@@ -14,7 +14,7 @@ class RatesNetworkDataSource {
         return RatesApiFactory.create()
                 .getRates(ACCESS_KEY)
                 .subscribeOn(Schedulers.io())
-                .map { response: RatesResponse -> RatesMapper.mapToRates(response) }
+                .map { response: RatesResponse -> RatesNetworkMapper.mapToRates(response) }
                 .observeOn(AndroidSchedulers.mainThread())
     }
 }

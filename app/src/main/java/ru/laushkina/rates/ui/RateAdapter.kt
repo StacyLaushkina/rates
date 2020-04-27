@@ -15,11 +15,11 @@ import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import ru.laushkina.rates.R
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 open class RateAdapter(@VisibleForTesting val rates: MutableList<RateViewModel>,
-                  private val listener: ValueChangeListener): RecyclerView.Adapter<RateAdapter.ViewHolder>() {
-    private val onClickSubject: Subject<RateViewModel> = PublishSubject.create()
-
+                       private val valueChangeListeners: ValueChangeListener,
+                       private val clickListener: RateClickListener): RecyclerView.Adapter<RateAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater
                 .from(parent.context)
@@ -41,7 +41,7 @@ open class RateAdapter(@VisibleForTesting val rates: MutableList<RateViewModel>,
         val amount = formatAmount(rate.amount, rate.showAmount)
         holder.valueEditView.setText(amount)
 
-        val textWatcher: TextWatcher = FirstValueTextWatcher(listener, rate)
+        val textWatcher: TextWatcher = FirstValueTextWatcher(valueChangeListeners, rate)
         holder.valueEditView.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 holder.valueEditView.addTextChangedListener(textWatcher)
@@ -61,14 +61,11 @@ open class RateAdapter(@VisibleForTesting val rates: MutableList<RateViewModel>,
                 return ""
             }
 
-            val longAmount = amount.toLong()
-            return if (amount == longAmount.toFloat()) String.format(Locale.US, "%d", longAmount)
-            else String.format(Locale.US, "%.2f", amount)
+            return String.format(Locale.US, "%d", amount.toLong())
         }
     }
 
     fun updateRates(rates: List<RateViewModel>) {
-
         this.rates.clear()
         this.rates.addAll(rates)
         notifyDataSetChanged()
@@ -76,21 +73,18 @@ open class RateAdapter(@VisibleForTesting val rates: MutableList<RateViewModel>,
 
     @VisibleForTesting
     fun onRateClicked(position: Int, rate: RateViewModel) {
-        onClickSubject.onNext(rate)
         synchronized(this) {
             rates.removeAt(position)
             rates.add(0, rate)
         }
         notifyItemMovedToTheTop(position)
+        Thread.sleep(TimeUnit.MILLISECONDS.toMillis(1))
+        clickListener.onClicked(position, rate)
     }
 
     @VisibleForTesting
     fun notifyItemMovedToTheTop(position: Int) {
         notifyItemMoved(position, 0)
-    }
-
-    fun getPositionClicks(): Subject<RateViewModel> {
-        return onClickSubject
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -126,5 +120,9 @@ open class RateAdapter(@VisibleForTesting val rates: MutableList<RateViewModel>,
         fun beforeValueChange(rate: RateViewModel)
         fun afterValueChange(rate: RateViewModel)
         fun onValueChange(rate: RateViewModel, value: String)
+    }
+
+    interface RateClickListener {
+        fun onClicked(position: Int, rate: RateViewModel)
     }
 }

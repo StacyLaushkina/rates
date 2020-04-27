@@ -4,7 +4,7 @@ import ru.laushkina.rates.model.Rate
 import ru.laushkina.rates.model.RateShortName
 import java.util.*
 
-class RatesMapper {
+class RatesNetworkMapper {
     companion object {
         fun mapToRates(response: RatesResponse?): List<Rate> {
             if (response?.Rates == null) {

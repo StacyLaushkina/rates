@@ -10,18 +10,15 @@ import androidx.work.WorkManager
 import io.reactivex.disposables.Disposable
 import ru.laushkina.rates.R
 import ru.laushkina.rates.RatesDependencyOperator
-import ru.laushkina.rates.model.RatesService
-import ru.laushkina.rates.ui.RateAdapter.ValueChangeListener
 import ru.laushkina.rates.util.RatesLog
 
-class RatesActivity : Activity(), RatesView, ValueChangeListener {
+class RatesActivity : Activity(), RatesView, RateAdapter.ValueChangeListener, RateAdapter.RateClickListener {
     companion object {
         private const val TAG = "RatesActivity"
     }
 
     private lateinit var ratesRecycler: RecyclerView
     private lateinit var ratesPresenter: RatesPresenter
-    private lateinit var itemClickDisposable: Disposable
     private var rateAdapter: RateAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +34,6 @@ class RatesActivity : Activity(), RatesView, ValueChangeListener {
     override fun onDestroy() {
         super.onDestroy()
         ratesPresenter.onDestroy()
-        itemClickDisposable.dispose()
     }
 
     override fun getAppContext(): Context {
@@ -46,11 +42,7 @@ class RatesActivity : Activity(), RatesView, ValueChangeListener {
 
     override fun showRates(rates: MutableList<RateViewModel>) {
         if (rateAdapter == null) {
-            rateAdapter = RateAdapter(rates, this)
-            itemClickDisposable = rateAdapter!!.getPositionClicks().subscribe { viewModel ->
-                ratesPresenter.onRateSelected(viewModel)
-                ratesRecycler.scrollToPosition(0)
-            }
+            rateAdapter = RateAdapter(rates, this, this)
             ratesRecycler.adapter = rateAdapter
             ratesRecycler.layoutManager = GridLayoutManager(this, 1)
             ratesRecycler.setHasFixedSize(true)
@@ -74,5 +66,10 @@ class RatesActivity : Activity(), RatesView, ValueChangeListener {
 
     override fun afterValueChange(rate: RateViewModel) {
         ratesPresenter.afterRateValueChange()
+    }
+
+    override fun onClicked(position: Int, rate: RateViewModel) {
+        ratesRecycler.scrollToPosition(0)
+        ratesPresenter.onRateSelected(rate)
     }
 }

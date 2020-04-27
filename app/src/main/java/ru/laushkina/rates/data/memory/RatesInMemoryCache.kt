@@ -8,19 +8,17 @@ import ru.laushkina.rates.model.Rate
 
 class RatesInMemoryCache : RatesDataSource {
 
-    private val observable: Subject<List<Rate>> = PublishSubject.create()
+    private var rates: List<Rate>? = null
 
     override fun save(rates: List<Rate>?) {
-        if (rates != null) {
-            observable.onNext(rates)
-        }
+        this.rates = rates
     }
 
     override fun getRates(): Maybe<List<Rate>> {
-        return observable.singleElement()
+        return Maybe.just(rates)
     }
 
     override fun getBaseRate(): Maybe<Rate> {
-        return observable.singleElement().map { rates: List<Rate> -> rates[0] }
+        return Maybe.just(rates).map { rates: List<Rate> -> rates[0] }
     }
 }
