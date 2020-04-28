@@ -4,7 +4,6 @@ import android.content.Context
 import io.reactivex.Maybe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import ru.laushkina.rates.data.RatesDataSource
 import ru.laushkina.rates.data.network.PeriodicUpdateScheduler
@@ -39,12 +38,22 @@ open class RatesService(private val context: Context,
                 .flatMap { rates: List<Rate> -> maybeLoadFromNet(rates) }
     }
 
-    // Load rates with baseRate, multiply it by current coefficient and save the result
-    fun loadRatesFromNetwork(baseRate: Rate): Maybe<List<Rate>> {
+    // Load rates from network, multiply it by current coefficient and save the result
+    fun loadNewRates(): Maybe<List<Rate>> {
+        return dbDataSource
+                .getBaseRate()
+                .defaultIfEmpty(DEFAULT_BASE_RATE)
+                .subscribeOn(Schedulers.io())
+                .flatMap { rate: Rate -> loadNewRates(rate) }
+    }
+
+    // Load rates from network, multiply it by current coefficient and save the result
+    fun loadNewRates(baseRate: Rate): Maybe<List<Rate>> {
         return networkDataSource.getRates()
                 .map { rates: List<Rate> ->
                     val newAmount = getBaseRateOrDefault(rates, baseRate.shortName).amount
-                    multiply(baseRate.amount / newAmount, rates)
+                    val multipliedRates = multiply(baseRate.amount / newAmount, rates)
+                    changeBaseRate(baseRate, multipliedRates)
                 }
                 .doAfterSuccess { rates: List<Rate>? ->
                     save(rates)
@@ -76,21 +85,13 @@ open class RatesService(private val context: Context,
 
     // Create new rates list with changed base rate and save the result
     fun onBaseRateChange(baseRate: Rate, currentRates: List<Rate>): Maybe<List<Rate>> {
-        val newRates = ArrayList(currentRates)
-        for (rate in newRates) {
-            rate.isBase = (rate.shortName == baseRate.shortName)
-        }
-        newRates.sortByDescending { it.isBase }
-        save(newRates)
+        save(changeBaseRate(baseRate, currentRates))
         return loadFromInMemoryCache()
     }
 
     private fun maybeLoadFromNet(rates: List<Rate>): Maybe<List<Rate>> {
         return if (rates.isEmpty()) {
-            dbDataSource
-                    .getBaseRate()
-                    .defaultIfEmpty(DEFAULT_BASE_RATE)
-                    .flatMap { rate: Rate -> loadRatesFromNetwork(rate) }
+            loadNewRates()
         } else {
             memoryDataSource.save(rates)
             Maybe.just(rates).observeOn(AndroidSchedulers.mainThread())
@@ -101,6 +102,16 @@ open class RatesService(private val context: Context,
         val newRates = multiply(value, rates)
         save(newRates)
         return loadFromInMemoryCache()
+    }
+
+    private fun changeBaseRate(baseRate: Rate, currentRates: List<Rate>): List<Rate> {
+        val newRates = ArrayList(currentRates)
+        for (rate in newRates) {
+            rate.isBase = (rate.shortName == baseRate.shortName)
+        }
+        newRates.sortByDescending { it.isBase }
+
+        return newRates
     }
 
     private fun save(newRates: List<Rate>?) {

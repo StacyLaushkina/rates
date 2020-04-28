@@ -3,10 +3,12 @@ package ru.laushkina.rates.ui
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.WorkManager
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import io.reactivex.disposables.Disposable
 import ru.laushkina.rates.R
 import ru.laushkina.rates.RatesDependencyOperator
@@ -29,6 +31,9 @@ class RatesActivity : Activity(), RatesView, RateAdapter.ValueChangeListener, Ra
 
         ratesPresenter = RatesPresenter(service, this)
         ratesPresenter.onCreate()
+
+        val updateFab: FloatingActionButton = findViewById(R.id.update_fab)
+        updateFab.setOnClickListener { ratesPresenter.onUpdateRequested() }
     }
 
     override fun onDestroy() {

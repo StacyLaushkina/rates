@@ -7,7 +7,6 @@ import io.reactivex.disposables.Disposable
 import ru.laushkina.rates.RatesDependencyOperator
 import ru.laushkina.rates.model.Rate
 import ru.laushkina.rates.model.RateShortName
-import ru.laushkina.rates.model.RatesService
 import ru.laushkina.rates.util.RatesLog
 
 class RatesLoadWorker(context: Context, params: WorkerParameters): Worker(context, params) {
@@ -31,7 +30,7 @@ class RatesLoadWorker(context: Context, params: WorkerParameters): Worker(contex
         val service = RatesDependencyOperator.getRatesService(applicationContext)
 
         loadDismissible = service
-                .loadRatesFromNetwork(Rate(RateShortName.parse(baseRateShortName), baseRateAmount, true))
+                .loadNewRates(Rate(RateShortName.parse(baseRateShortName), baseRateAmount, true))
                 .subscribe({ dispose() }) { dispose() }
 
         return Result.success()

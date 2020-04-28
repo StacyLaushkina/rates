@@ -32,6 +32,14 @@ class RatesPresenter(private val ratesService: RatesService, private val ratesVi
         compositeDisposable.dispose()
     }
 
+    fun onUpdateRequested() {
+        // TODO do not allow to update more often then once in 30 minutes
+        compositeDisposable.add(ratesService.loadNewRates().subscribe(
+                { rates: List<Rate> -> this.onRatesUpdated(rates) },
+                ratesView::showError
+        ))
+    }
+
     fun onRateSelected(selectedRate: RateViewModel) {
         compositeDisposable.add(
                 ratesService.onBaseRateChange(
