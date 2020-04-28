@@ -10,7 +10,7 @@ class RatesNetworkDataSource {
         const val ACCESS_KEY = "adfba205d005b83742c46e9160cc6084"
     }
 
-    fun getRates(baseRate: String): Maybe<List<Rate>> {
+    fun getRates(): Maybe<List<Rate>> {
         return RatesApiFactory.create()
                 .getRates(ACCESS_KEY)
                 .subscribeOn(Schedulers.io())

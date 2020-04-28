@@ -98,14 +98,10 @@ open class RateAdapter(@VisibleForTesting val rates: MutableList<RateViewModel>,
 
     internal class FirstValueTextWatcher(private val listener: ValueChangeListener,
                                          private val viewModel: RateViewModel) : TextWatcher {
-        override fun afterTextChanged(s: Editable) {
-            listener.afterValueChange(viewModel)
-        }
+        override fun afterTextChanged(s: Editable) { }
 
         override fun beforeTextChanged(s: CharSequence, start: Int,
-                                       count: Int, after: Int) {
-            listener.beforeValueChange(viewModel)
-        }
+                                       count: Int, after: Int) { }
 
         override fun onTextChanged(s: CharSequence, start: Int,
                                    before: Int, count: Int) {
@@ -117,8 +113,6 @@ open class RateAdapter(@VisibleForTesting val rates: MutableList<RateViewModel>,
     }
 
     interface ValueChangeListener {
-        fun beforeValueChange(rate: RateViewModel)
-        fun afterValueChange(rate: RateViewModel)
         fun onValueChange(rate: RateViewModel, value: String)
     }
 

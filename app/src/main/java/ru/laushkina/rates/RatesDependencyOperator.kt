@@ -10,7 +10,7 @@ import ru.laushkina.rates.model.RatesService
 class RatesDependencyOperator {
     companion object {
         fun getRatesService(context: Context): RatesService {
-            return RatesService(getDBDataSource(context), getNetworkDataSource(), getInMemoryDataSource())
+            return RatesService(context, getDBDataSource(context), getNetworkDataSource(), getInMemoryDataSource())
         }
 
         private fun getInMemoryDataSource(): RatesDataSource {

@@ -1,16 +1,19 @@
 package ru.laushkina.rates.model
 
+import android.content.Context
 import io.reactivex.Maybe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import ru.laushkina.rates.data.RatesDataSource
+import ru.laushkina.rates.data.network.PeriodicUpdateScheduler
 import ru.laushkina.rates.data.network.RatesNetworkDataSource
 import ru.laushkina.rates.util.RatesLog
 import java.util.ArrayList
 
-open class RatesService(private val dbDataSource: RatesDataSource,
+open class RatesService(private val context: Context,
+                        private val dbDataSource: RatesDataSource,
                         private val networkDataSource: RatesNetworkDataSource,
                         private val memoryDataSource: RatesDataSource) {
 
@@ -18,7 +21,7 @@ open class RatesService(private val dbDataSource: RatesDataSource,
 
     companion object {
         private const val TAG = "RatesService"
-        private val DEFAULT_BASE_RATE = Rate(RateShortName.EUR, 1f, true)
+        private val DEFAULT_BASE_RATE = Rate(RateShortName.USD, 1f, true)
 
         private fun multiply(value: Float, original: List<Rate>): List<Rate> {
             val updatedValues: MutableList<Rate> = ArrayList()
@@ -38,16 +41,29 @@ open class RatesService(private val dbDataSource: RatesDataSource,
 
     // Load rates with baseRate, multiply it by current coefficient and save the result
     fun loadRatesFromNetwork(baseRate: Rate): Maybe<List<Rate>> {
-        return networkDataSource.getRates(baseRate.shortName.name)
-                .map { rates: List<Rate> -> multiply(baseRate.amount, rates) }
+        return networkDataSource.getRates()
+                .map { rates: List<Rate> ->
+                    val newAmount = getBaseRateOrDefault(rates, baseRate.shortName).amount
+                    multiply(baseRate.amount / newAmount, rates)
+                }
                 .doAfterSuccess { rates: List<Rate>? ->
                     save(rates)
+                    PeriodicUpdateScheduler.scheduleNextUpdate(context, baseRate.amount, baseRate.shortName.name)
                     dispose()
                 }
                 .doOnError { throwable: Throwable? ->
                     RatesLog.e(TAG, "Error in rates download", throwable)
                     dispose()
                 }
+    }
+
+    private fun getBaseRateOrDefault(rates: List<Rate>, baseRateShortName: RateShortName): Rate {
+        for (rate in rates) {
+            if (rate.shortName == baseRateShortName) {
+                return rate
+            }
+        }
+        return DEFAULT_BASE_RATE
     }
 
     // Get data from local cache, re-calculate all rates and save result

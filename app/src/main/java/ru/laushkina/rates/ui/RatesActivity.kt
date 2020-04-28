@@ -27,7 +27,7 @@ class RatesActivity : Activity(), RatesView, RateAdapter.ValueChangeListener, Ra
         ratesRecycler = findViewById(R.id.rates)
         val service = RatesDependencyOperator.getRatesService(getAppContext())
 
-        ratesPresenter = RatesPresenter(service, WorkManager.getInstance(getAppContext()), this)
+        ratesPresenter = RatesPresenter(service, this)
         ratesPresenter.onCreate()
     }
 
@@ -58,14 +58,6 @@ class RatesActivity : Activity(), RatesView, RateAdapter.ValueChangeListener, Ra
 
     override fun onValueChange(rate: RateViewModel, value: String) {
         ratesPresenter.onRateValueChange(rate, value)
-    }
-
-    override fun beforeValueChange(rate: RateViewModel) {
-        ratesPresenter.beforeRateValueChange()
-    }
-
-    override fun afterValueChange(rate: RateViewModel) {
-        ratesPresenter.afterRateValueChange()
     }
 
     override fun onClicked(position: Int, rate: RateViewModel) {
