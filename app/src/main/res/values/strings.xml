@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Rates</string>
+    <string name="app_name">Rate exchange</string>
 
     <string name="rates_title">@string/app_name</string>
     <string name="rate_image_content_description">rate content description</string>
