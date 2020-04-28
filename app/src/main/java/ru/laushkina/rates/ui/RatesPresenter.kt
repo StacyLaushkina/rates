@@ -70,7 +70,7 @@ class RatesPresenter(private val ratesService: RatesService,
         }
 
         compositeDisposable.add(ratesService
-                .onRateValueChange(floatValue / rate.amount)
+                .onRateValueChange(rate.amount, floatValue)
                 .subscribe(
                         { rates: List<Rate> -> this.onRatesUpdated(rates) },
                         ratesView::showError
