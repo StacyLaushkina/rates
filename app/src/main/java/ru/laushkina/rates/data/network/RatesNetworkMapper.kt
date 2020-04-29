@@ -13,9 +13,6 @@ class RatesNetworkMapper {
 
             val result: MutableList<Rate> = ArrayList<Rate>()
 
-            // Add base currency
-            result.add(Rate(RateShortName.parse(response.Source), 1f, true))
-
             // Add other currencies
             for (entry in response.Rates.entries) {
                 result.add(Rate(parseNonBaseRate(entry.key, response.Source), entry.value, false))
@@ -26,7 +23,7 @@ class RatesNetworkMapper {
 
         private fun parseNonBaseRate(rate: String, baseRate: String): RateShortName {
             // All non-base rates start with base rate short name
-            return RateShortName.parse(rate.replace(baseRate, ""))
+            return RateShortName.parse(rate.replaceFirst(baseRate, ""))
         }
     }
 }

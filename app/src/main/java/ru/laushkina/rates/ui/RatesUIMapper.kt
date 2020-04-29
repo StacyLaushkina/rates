@@ -11,10 +11,14 @@ class RatesUIMapper {
             val result: MutableList<RateViewModel> = ArrayList(rates.size)
             var nameImagePair: Pair<Int, Int>
             for (rate in rates) {
-                nameImagePair = RateFullName.getFullName(rate.shortName)
+                nameImagePair = RateUIInfo.getFullNameAndImage(rate.shortName)
                 result.add(RateViewModel(nameImagePair.second, nameImagePair.first, rate.shortName.name, rate.amount, !emptyAllRateValues))
             }
-            return result
+            val baseRate = result[0]
+            return result.sortedWith(compareBy(
+                    { it.shortName != baseRate.shortName },
+                    { it.imageId == RateUIInfo.getUnknownImageId() }
+            )).toMutableList()
         }
 
         fun fromViewModel(rates: List<RateViewModel>): MutableList<Rate> {
