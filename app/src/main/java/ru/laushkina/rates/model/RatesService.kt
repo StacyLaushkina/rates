@@ -1,6 +1,7 @@
 package ru.laushkina.rates.model
 
 import android.content.Context
+import androidx.annotation.VisibleForTesting
 import io.reactivex.Maybe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -22,10 +23,12 @@ open class RatesService(private val context: Context,
         private const val TAG = "RatesService"
         private val DEFAULT_BASE_RATE = Rate(RateShortName.USD, 1f, true)
 
-        private fun multiply(value: Float, original: List<Rate>): List<Rate> {
+        @VisibleForTesting
+        fun multiply(oldValue: Float, newValue: Float, original: List<Rate>): List<Rate> {
+            val multiplier = newValue / oldValue
             val updatedValues: MutableList<Rate> = ArrayList()
             for (rate in original) {
-                updatedValues.add(Rate(rate.shortName, rate.amount * value, rate.isBase))
+                updatedValues.add(Rate(rate.shortName, rate.amount * multiplier, rate.isBase))
             }
             return updatedValues
         }
@@ -51,8 +54,9 @@ open class RatesService(private val context: Context,
     fun loadNewRates(baseRate: Rate): Maybe<List<Rate>> {
         return networkDataSource.getRates()
                 .map { rates: List<Rate> ->
-                    val newAmount = getBaseRateOrDefault(rates, baseRate.shortName).amount
-                    val multipliedRates = multiply(baseRate.amount / newAmount, rates)
+                    val serverAmount = getBaseRateOrDefault(rates, baseRate.shortName).amount
+                    // We need to change values from server to adapt local coefficients, so old value is the one from network
+                    val multipliedRates = multiply(serverAmount, baseRate.amount, rates)
                     changeBaseRate(baseRate, multipliedRates)
                 }
                 .doAfterSuccess { rates: List<Rate>? ->
@@ -66,20 +70,11 @@ open class RatesService(private val context: Context,
                 }
     }
 
-    private fun getBaseRateOrDefault(rates: List<Rate>, baseRateShortName: RateShortName): Rate {
-        for (rate in rates) {
-            if (rate.shortName == baseRateShortName) {
-                return rate
-            }
-        }
-        return DEFAULT_BASE_RATE
-    }
-
     // Get data from local cache, re-calculate all rates and save result
     fun onRateValueChange(oldValue: Float, newValue: Float): Maybe<List<Rate>> {
         return loadFromInMemoryCache()
                 .subscribeOn(Schedulers.io())
-                .flatMap { rates: List<Rate> -> calculateAndSaveRates(rates, newValue / oldValue) }
+                .flatMap { rates: List<Rate> -> calculateAndSaveRates(rates, oldValue, newValue) }
                 .observeOn(AndroidSchedulers.mainThread())
     }
 
@@ -87,6 +82,16 @@ open class RatesService(private val context: Context,
     fun onBaseRateChange(baseRate: Rate, currentRates: List<Rate>): Maybe<List<Rate>> {
         save(changeBaseRate(baseRate, currentRates))
         return loadFromInMemoryCache()
+    }
+
+    @VisibleForTesting
+    fun getBaseRateOrDefault(rates: List<Rate>, baseRateShortName: RateShortName): Rate {
+        for (rate in rates) {
+            if (rate.shortName == baseRateShortName) {
+                return rate
+            }
+        }
+        return DEFAULT_BASE_RATE
     }
 
     private fun maybeLoadFromNet(rates: List<Rate>): Maybe<List<Rate>> {
@@ -98,13 +103,15 @@ open class RatesService(private val context: Context,
         }
     }
 
-    private fun calculateAndSaveRates(rates: List<Rate>, value: Float): Maybe<List<Rate>> {
-        val newRates = multiply(value, rates)
+    @VisibleForTesting
+    fun calculateAndSaveRates(rates: List<Rate>, oldValue: Float, newValue: Float): Maybe<List<Rate>> {
+        val newRates = multiply(oldValue, newValue, rates)
         save(newRates)
         return loadFromInMemoryCache()
     }
 
-    private fun changeBaseRate(baseRate: Rate, currentRates: List<Rate>): List<Rate> {
+    @VisibleForTesting
+    fun changeBaseRate(baseRate: Rate, currentRates: List<Rate>): List<Rate> {
         val newRates = ArrayList(currentRates)
         for (rate in newRates) {
             rate.isBase = (rate.shortName == baseRate.shortName)
@@ -114,7 +121,8 @@ open class RatesService(private val context: Context,
         return newRates
     }
 
-    private fun save(newRates: List<Rate>?) {
+    @VisibleForTesting
+    fun save(newRates: List<Rate>?) {
         memoryDataSource.save(newRates)
         dbDataSource.save(newRates)
     }

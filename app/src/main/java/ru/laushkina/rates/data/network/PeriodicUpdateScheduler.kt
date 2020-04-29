@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit
 
 class PeriodicUpdateScheduler {
     companion object {
-        private val UPDATE_INTERVAL_SECONDS = TimeUnit.HOURS.toSeconds(2)
+        private val UPDATE_INTERVAL_HOURS = TimeUnit.HOURS.toHours(2)
 
         fun scheduleNextUpdate(context: Context, amount: Float, shortName: String) {
             val rate = Data.Builder()
@@ -17,7 +17,7 @@ class PeriodicUpdateScheduler {
                     .putFloat(RatesLoadWorker.BASE_RATE_AMOUNT, amount)
                     .build()
             val mRequest = OneTimeWorkRequest.Builder(RatesLoadWorker::class.java)
-                    .setInitialDelay(UPDATE_INTERVAL_SECONDS, TimeUnit.SECONDS)
+                    .setInitialDelay(UPDATE_INTERVAL_HOURS, TimeUnit.HOURS)
                     .addTag(RatesLoadWorker.TAG)
                     .setInputData(rate)
                     .build()

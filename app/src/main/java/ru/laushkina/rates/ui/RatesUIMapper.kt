@@ -1,6 +1,5 @@
 package ru.laushkina.rates.ui
 
-import android.util.Pair
 import ru.laushkina.rates.model.Rate
 import ru.laushkina.rates.model.RateShortName
 import java.util.ArrayList
@@ -9,11 +8,11 @@ class RatesUIMapper {
     companion object {
         fun toViewModel(rates: List<Rate>, emptyAllRateValues: Boolean): MutableList<RateViewModel> {
             val result: MutableList<RateViewModel> = ArrayList(rates.size)
-            var nameImagePair: Pair<Int, Int>
             for (rate in rates) {
-                nameImagePair = RateUIInfo.getFullNameAndImage(rate.shortName)
+                val nameImagePair = RateUIInfo.getFullNameAndImage(rate.shortName)
                 result.add(RateViewModel(nameImagePair.second, nameImagePair.first, rate.shortName.name, rate.amount, !emptyAllRateValues))
             }
+
             val baseRate = result[0]
             return result.sortedWith(compareBy(
                     { it.shortName != baseRate.shortName },

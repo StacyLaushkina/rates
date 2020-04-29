@@ -37,7 +37,7 @@ class RateAdapterTest {
         val rate2 = RateViewModel(1, 2, "2", 10f, true)
         val rates = mutableListOf(rate1, rate2)
         val listener = mock<RateAdapter.ValueChangeListener>()
-        val adapter = spy(RateAdapter(rates, listener))
+        val adapter = spy(RateAdapter(rates, listener, mock()))
 
         doNothing().`when`(adapter).notifyItemMovedToTheTop(any())
 

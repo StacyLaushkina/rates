@@ -18,11 +18,11 @@ class RatesPresenter(private val ratesService: RatesService, private val ratesVi
     var compositeDisposable: CompositeDisposable = CompositeDisposable()
     @VisibleForTesting
     var currentRates: MutableList<RateViewModel> = arrayListOf()
-
-    private var emptyAllRateValues = false
+    @VisibleForTesting
+    var emptyAllRateValues = false
 
     fun onCreate() {
-        compositeDisposable.add(ratesService.initialize().subscribe(
+        addDisposable(ratesService.initialize().subscribe(
                 { rates: List<Rate> -> this.onRatesUpdated(rates) },
                 ratesView::showError
         ))
@@ -34,14 +34,14 @@ class RatesPresenter(private val ratesService: RatesService, private val ratesVi
 
     fun onUpdateRequested() {
         // TODO do not allow to update more often then once in 30 minutes
-        compositeDisposable.add(ratesService.loadNewRates().subscribe(
+        addDisposable(ratesService.loadNewRates().subscribe(
                 { rates: List<Rate> -> this.onRatesUpdated(rates) },
                 ratesView::showError
         ))
     }
 
     fun onRateSelected(selectedRate: RateViewModel) {
-        compositeDisposable.add(
+        addDisposable(
                 ratesService.onBaseRateChange(
                 Rate(RateShortName.parse(selectedRate.shortName), selectedRate.amount, true),
                 RatesUIMapper.fromViewModel(currentRates)
@@ -61,7 +61,7 @@ class RatesPresenter(private val ratesService: RatesService, private val ratesVi
             emptyAllRateValues = false
         }
 
-        compositeDisposable.add(ratesService
+        addDisposable(ratesService
                 .onRateValueChange(rate.amount, floatValue)
                 .subscribe(
                         { rates: List<Rate> -> this.onRatesUpdated(rates) },
@@ -75,5 +75,11 @@ class RatesPresenter(private val ratesService: RatesService, private val ratesVi
 
         currentRates = RatesUIMapper.toViewModel(rates, emptyAllRateValues)
         ratesView.showRates(currentRates)
+    }
+
+    private fun addDisposable(disposable: Disposable?) {
+        if (disposable != null) {
+            compositeDisposable.add(disposable)
+        }
     }
 }
