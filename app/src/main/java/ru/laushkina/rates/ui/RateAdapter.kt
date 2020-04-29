@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit
 
 open class RateAdapter(@VisibleForTesting val rates: MutableList<RateViewModel>,
                        private val valueChangeListeners: ValueChangeListener,
-                       private val clickListener: RateClickListener): RecyclerView.Adapter<RateAdapter.ViewHolder>() {
+                       private val clickListener: RateClickListener) : RecyclerView.Adapter<RateAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater
                 .from(parent.context)
@@ -38,31 +38,35 @@ open class RateAdapter(@VisibleForTesting val rates: MutableList<RateViewModel>,
         holder.rateShortText.text = rate.shortName
         holder.rateText.setText(rate.name)
 
-        val amount = formatAmount(rate.amount, rate.showAmount)
-        holder.valueEditView.setText(amount)
+        setValue(holder, rate.amount, rate.showAmount)
 
-        val textWatcher: TextWatcher = FirstValueTextWatcher(valueChangeListeners, rate)
-        holder.valueEditView.setOnFocusChangeListener { _, hasFocus ->
+        val intTextWatcher: TextWatcher = FirstValueTextWatcher(valueChangeListeners, rate)
+        holder.valueIntEditView.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
-                holder.valueEditView.addTextChangedListener(textWatcher)
+                holder.valueIntEditView.addTextChangedListener(intTextWatcher)
             } else {
-                holder.valueEditView.removeTextChangedListener(textWatcher)
+                holder.valueIntEditView.removeTextChangedListener(intTextWatcher)
             }
         }
-        holder.valueEditView.setSelection(holder.valueEditView.length())
+
+        holder.valueIntEditView.setSelection(holder.valueIntEditView.length())
 
         holder.container.setOnClickListener { onRateClicked(position, rate) }
     }
 
-    companion object {
-        @VisibleForTesting
-        fun formatAmount(amount: Float?, showValue: Boolean): String {
-            if (amount == null || !showValue) {
-                return ""
-            }
-
-            return String.format(Locale.US, "%d", amount.toLong())
+    @VisibleForTesting
+    fun setValue(holder: ViewHolder, amount: Float?, showValue: Boolean) {
+        if (amount == null || !showValue) {
+            holder.valueIntEditView.setText("")
+            holder.valueFractionTextView.text = ""
+            return
         }
+
+        val long = amount.toLong()
+        holder.valueIntEditView.setText(String.format(Locale.US, "%d", long))
+
+        val fraction = ((amount - long) * 100).toLong()
+        holder.valueFractionTextView.text = String.format(Locale.US, "%d", fraction)
     }
 
     fun updateRates(rates: List<RateViewModel>) {
@@ -92,7 +96,8 @@ open class RateAdapter(@VisibleForTesting val rates: MutableList<RateViewModel>,
         internal val rateImageView: ImageView = itemView.findViewById(R.id.rate_image)
         internal val rateShortText: TextView = itemView.findViewById(R.id.rate_short_text)
         internal val rateText: TextView = itemView.findViewById(R.id.rate_text)
-        internal val valueEditView: EditText = itemView.findViewById(R.id.rate_value)
+        internal val valueIntEditView: EditText = itemView.findViewById(R.id.rate_value_int)
+        internal val valueFractionTextView: TextView = itemView.findViewById(R.id.rate_value_fraction)
         internal val container: View = itemView
     }
 

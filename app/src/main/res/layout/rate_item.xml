@@ -35,14 +35,35 @@
         tools:text="US Dollar"/>
 
     <EditText
-        android:id="@+id/rate_value"
+        android:id="@+id/rate_value_int"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/rates_rate_value_size"
         android:textColor="@color/rates_rate_value_color"
-        android:layout_alignParentEnd="true"
+        android:layout_toStartOf="@+id/rate_value_separator"
         android:inputType="number"
         android:maxLength="10"
         android:hint="0"
-        tools:text="1183.06" />
+        tools:text="1183" />
+
+    <TextView
+        android:id="@+id/rate_value_separator"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/rates_item_short_text_height"
+        android:textSize="@dimen/rates_long_rate_name_text_size"
+        android:textColor="@color/rates_long_text_color"
+        android:layout_toStartOf="@+id/rate_value_fraction"
+        android:layout_below="@+id/rate_short_text"
+        android:text="."/>
+
+    <TextView
+        android:id="@+id/rate_value_fraction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/rates_rate_value_size"
+        android:textColor="@color/rates_long_text_color"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBaseline="@+id/rate_value_int"
+        android:maxLength="2"
+        tools:text="06" />
 </RelativeLayout>
