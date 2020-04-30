@@ -10,7 +10,7 @@ import ru.laushkina.rates.model.RateShortName
 class RatesNetworkMapperTest {
     @Test
     fun `list of rates is null when rates in response are null`() {
-        assertNull(RatesNetworkMapper.mapToRates(null))
+        assertEquals(0, RatesNetworkMapper.mapToRates(null).size)
     }
 
     @Test

@@ -9,11 +9,10 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import ru.laushkina.rates.model.Rate
 import ru.laushkina.rates.model.RatesService
-import ru.laushkina.rates.data.network.RatesLoadWorker
 import ru.laushkina.rates.model.RateShortName
-import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class RatesPresenter(private val ratesService: RatesService, private val ratesView: RatesView) {
+class RatesPresenter(var ratesView: RatesView, var ratesService: RatesService) {
     @VisibleForTesting
     var compositeDisposable: CompositeDisposable = CompositeDisposable()
     @VisibleForTesting

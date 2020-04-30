@@ -8,6 +8,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import ru.laushkina.rates.data.LastUpdateDataSource
 import ru.laushkina.rates.data.RatesDataSource
+import ru.laushkina.rates.data.memory.RatesInMemoryCache
 import ru.laushkina.rates.data.network.PeriodicUpdateScheduler
 import ru.laushkina.rates.data.network.RatesNetworkDataSource
 import ru.laushkina.rates.util.RatesLog
@@ -50,8 +51,8 @@ open class RatesService(private val context: Context,
     fun requestLoadRates(): Maybe<List<Rate>> {
         val lastUpdateTime = lastUpdateDataSource.get()
         val diff = System.currentTimeMillis() - lastUpdateTime
-        if (TimeUnit.MILLISECONDS.toSeconds(diff) >= UPDATE_MIN_UPDATE_PROHIBIT_DURATION_SECONDS ) {
-           return loadNewRates()
+        if (TimeUnit.MILLISECONDS.toSeconds(diff) >= UPDATE_MIN_UPDATE_PROHIBIT_DURATION_SECONDS) {
+            return loadNewRates()
         }
         return Maybe.empty()
     }
@@ -146,7 +147,7 @@ open class RatesService(private val context: Context,
         return dbDataSource.getRates()
     }
 
-    private fun loadFromInMemoryCache(): Maybe<List<Rate>>  {
+    private fun loadFromInMemoryCache(): Maybe<List<Rate>> {
         return memoryDataSource.getRates()
     }
 

@@ -14,7 +14,7 @@ class RatesPresenterTest {
     }
     private val view = mock<RatesView>()
 
-    private val presenter = RatesPresenter(service, view)
+    private val presenter = RatesPresenter(view, service)
 
     @Test
     fun `empty all rates when new rate value is empty`() {

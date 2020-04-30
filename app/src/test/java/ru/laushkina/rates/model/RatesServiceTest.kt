@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.*
 import org.junit.Assert.*
 import org.junit.Test
 import ru.laushkina.rates.TestUtils
+import ru.laushkina.rates.data.LastUpdateDataSource
 import ru.laushkina.rates.data.RatesDataSource
 import ru.laushkina.rates.data.network.RatesNetworkDataSource
 
@@ -13,12 +14,14 @@ class RatesServiceTest {
     private val ratesDBDataSource = mock<RatesDataSource>()
     private val ratesNetworkDataSource = mock<RatesNetworkDataSource>()
     private val ratesMemoryDataSource = mock<RatesDataSource>()
+    private val lastUpdateDataSource = mock<LastUpdateDataSource>()
 
     private val service = RatesService(
             context,
             ratesDBDataSource,
             ratesNetworkDataSource,
-            ratesMemoryDataSource
+            ratesMemoryDataSource,
+            lastUpdateDataSource
     )
 
     @Test

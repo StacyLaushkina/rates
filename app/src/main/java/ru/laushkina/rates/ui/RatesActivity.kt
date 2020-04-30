@@ -3,16 +3,16 @@ package ru.laushkina.rates.ui
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.work.WorkManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import io.reactivex.disposables.Disposable
+import ru.laushkina.rates.ContextModule
+import ru.laushkina.rates.DaggerApplicationComponent
 import ru.laushkina.rates.R
-import ru.laushkina.rates.RatesDependencyOperator
+import ru.laushkina.rates.RatesViewModule
 import ru.laushkina.rates.util.RatesLog
+import javax.inject.Inject
 
 class RatesActivity : Activity(), RatesView, RateAdapter.ValueChangeListener, RateAdapter.RateClickListener {
     companion object {
@@ -20,16 +20,19 @@ class RatesActivity : Activity(), RatesView, RateAdapter.ValueChangeListener, Ra
     }
 
     private lateinit var ratesRecycler: RecyclerView
-    private lateinit var ratesPresenter: RatesPresenter
+    @Inject lateinit var ratesPresenter: RatesPresenter
     private var rateAdapter: RateAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_rates)
         ratesRecycler = findViewById(R.id.rates)
-        val service = RatesDependencyOperator.getRatesService(getAppContext())
 
-        ratesPresenter = RatesPresenter(service, this)
+        ratesPresenter = DaggerApplicationComponent.builder()
+                .contextModule(ContextModule(this))
+                .ratesViewModule(RatesViewModule(this))
+                .build().getRatesPresenter()
+
         ratesPresenter.onCreate()
 
         val updateFab: FloatingActionButton = findViewById(R.id.update_fab)
