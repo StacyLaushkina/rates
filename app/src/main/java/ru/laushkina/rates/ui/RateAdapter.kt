@@ -16,8 +16,9 @@ import io.reactivex.subjects.Subject
 import ru.laushkina.rates.R
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.math.roundToLong
 
-open class RateAdapter(@VisibleForTesting val rates: MutableList<RateViewModel>,
+class RateAdapter(@VisibleForTesting val rates: MutableList<RateViewModel>,
                        private val valueChangeListeners: ValueChangeListener,
                        private val clickListener: RateClickListener) : RecyclerView.Adapter<RateAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -65,7 +66,7 @@ open class RateAdapter(@VisibleForTesting val rates: MutableList<RateViewModel>,
         val long = amount.toLong()
         holder.valueIntEditView.setText(String.format(Locale.US, "%d", long))
 
-        val fraction = ((amount - long) * 100).toLong()
+        val fraction = ((amount - long) * 100).roundToLong()
         holder.valueFractionTextView.text = String.format(Locale.US, "%d", fraction)
     }
 
@@ -82,7 +83,6 @@ open class RateAdapter(@VisibleForTesting val rates: MutableList<RateViewModel>,
             rates.add(0, rate)
         }
         notifyItemMovedToTheTop(position)
-        Thread.sleep(TimeUnit.MILLISECONDS.toMillis(1))
         clickListener.onClicked(position, rate)
     }
 
