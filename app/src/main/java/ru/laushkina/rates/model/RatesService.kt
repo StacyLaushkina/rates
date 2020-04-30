@@ -26,7 +26,7 @@ open class RatesService(private val context: Context,
     companion object {
         private const val TAG = "RatesService"
         private val DEFAULT_BASE_RATE = Rate(RateShortName.USD, 1f, true)
-        private val UPDATE_INTERVAL_SECONDS = TimeUnit.HOURS.toSeconds(2)
+        private val UPDATE_INTERVAL_SECONDS = TimeUnit.HOURS.toSeconds(4)
         private val UPDATE_MIN_UPDATE_PROHIBIT_DURATION_SECONDS = TimeUnit.MINUTES.toSeconds(30)
 
         @VisibleForTesting
