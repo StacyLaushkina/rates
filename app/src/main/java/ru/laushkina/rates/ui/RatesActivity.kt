@@ -16,12 +16,12 @@ import javax.inject.Inject
 
 class RatesActivity : Activity(), RatesView, RateAdapter.ValueChangeListener, RateAdapter.RateClickListener {
     companion object {
-        private const val TAG = "RatesActivity"
+        private const val TAG = "[RatesActivity]"
     }
 
     private lateinit var ratesRecycler: RecyclerView
-    @Inject lateinit var ratesPresenter: RatesPresenter
     private var rateAdapter: RateAdapter? = null
+    @Inject lateinit var ratesPresenter: RatesPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

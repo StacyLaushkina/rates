@@ -1,6 +1,5 @@
 package ru.laushkina.rates.di
 
-import android.content.Context
 import dagger.Module
 import dagger.Provides
 import ru.laushkina.rates.ui.RatesView
