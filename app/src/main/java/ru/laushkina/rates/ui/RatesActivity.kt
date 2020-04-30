@@ -7,10 +7,10 @@ import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import ru.laushkina.rates.ContextModule
-import ru.laushkina.rates.DaggerApplicationComponent
+import ru.laushkina.rates.di.ContextModule
 import ru.laushkina.rates.R
-import ru.laushkina.rates.RatesViewModule
+import ru.laushkina.rates.di.DaggerApplicationComponent
+import ru.laushkina.rates.di.RatesViewModule
 import ru.laushkina.rates.util.RatesLog
 import javax.inject.Inject
 

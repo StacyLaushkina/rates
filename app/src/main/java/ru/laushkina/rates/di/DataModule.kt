@@ -1,4 +1,4 @@
-package ru.laushkina.rates
+package ru.laushkina.rates.di
 
 import android.content.Context
 import dagger.Module

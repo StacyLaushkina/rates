@@ -1,4 +1,4 @@
-package ru.laushkina.rates
+package ru.laushkina.rates.di
 
 import dagger.Module
 import dagger.Provides

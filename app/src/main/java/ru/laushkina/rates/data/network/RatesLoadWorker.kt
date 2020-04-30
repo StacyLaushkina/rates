@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import io.reactivex.disposables.Disposable
-import ru.laushkina.rates.ContextModule
-import ru.laushkina.rates.DaggerApplicationComponent
+import ru.laushkina.rates.di.ContextModule
+import ru.laushkina.rates.di.DaggerApplicationComponent
 import ru.laushkina.rates.model.Rate
 import ru.laushkina.rates.model.RateShortName
 import ru.laushkina.rates.util.RatesLog

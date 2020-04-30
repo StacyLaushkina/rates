@@ -13,8 +13,7 @@ import ru.laushkina.rates.model.RateShortName
 import javax.inject.Inject
 
 class RatesPresenter(var ratesView: RatesView, var ratesService: RatesService) {
-    @VisibleForTesting
-    var compositeDisposable: CompositeDisposable = CompositeDisposable()
+    private var compositeDisposable: CompositeDisposable = CompositeDisposable()
     @VisibleForTesting
     var currentRates: MutableList<RateViewModel> = arrayListOf()
     @VisibleForTesting
@@ -32,7 +31,6 @@ class RatesPresenter(var ratesView: RatesView, var ratesService: RatesService) {
     }
 
     fun onUpdateRequested() {
-        // TODO do not allow to update more often then once in 30 minutes
         addDisposable(ratesService.requestLoadRates().subscribe(
                 { rates: List<Rate> -> this.onRatesUpdated(rates) },
                 ratesView::showError,
