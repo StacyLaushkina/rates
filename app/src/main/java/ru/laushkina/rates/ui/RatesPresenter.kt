@@ -34,9 +34,10 @@ class RatesPresenter(private val ratesService: RatesService, private val ratesVi
 
     fun onUpdateRequested() {
         // TODO do not allow to update more often then once in 30 minutes
-        addDisposable(ratesService.loadNewRates().subscribe(
+        addDisposable(ratesService.requestLoadRates().subscribe(
                 { rates: List<Rate> -> this.onRatesUpdated(rates) },
-                ratesView::showError
+                ratesView::showError,
+                { ratesView.showTooEarlyForNewUpdate() }
         ))
     }
 

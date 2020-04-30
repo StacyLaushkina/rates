@@ -7,5 +7,7 @@ interface RatesView {
 
     fun showError(throwable: Throwable)
 
+    fun showTooEarlyForNewUpdate()
+
     fun getAppContext(): Context
 }

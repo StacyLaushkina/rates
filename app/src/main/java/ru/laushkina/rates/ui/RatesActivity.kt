@@ -61,6 +61,10 @@ class RatesActivity : Activity(), RatesView, RateAdapter.ValueChangeListener, Ra
         Toast.makeText(this, "Cannot update rates: " + throwable.message, Toast.LENGTH_LONG).show()
     }
 
+    override fun showTooEarlyForNewUpdate() {
+        Toast.makeText(this, "Too early for new update", Toast.LENGTH_LONG).show()
+    }
+
     override fun onValueChange(rate: RateViewModel, value: String) {
         ratesPresenter.onRateValueChange(rate, value)
     }
