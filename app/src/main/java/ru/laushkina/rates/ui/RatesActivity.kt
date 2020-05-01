@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import ru.laushkina.rates.di.ContextModule
 import ru.laushkina.rates.R
-import ru.laushkina.rates.di.DaggerApplicationComponent
+import ru.laushkina.rates.di.DaggerPresenterComponent
 import ru.laushkina.rates.di.RatesViewModule
 import ru.laushkina.rates.util.RatesLog
 import javax.inject.Inject
@@ -28,7 +28,7 @@ class RatesActivity : Activity(), RatesView, RateAdapter.ValueChangeListener, Ra
         setContentView(R.layout.activity_rates)
         ratesRecycler = findViewById(R.id.rates)
 
-        ratesPresenter = DaggerApplicationComponent.builder()
+        ratesPresenter = DaggerPresenterComponent.builder()
                 .contextModule(ContextModule(this))
                 .ratesViewModule(RatesViewModule(this))
                 .build().getRatesPresenter()

@@ -26,7 +26,7 @@ open class RatesService(private val context: Context,
     companion object {
         private const val TAG = "[RatesService]"
         private val DEFAULT_BASE_RATE = Rate(RateShortName.USD, 1f, true)
-        private val UPDATE_INTERVAL_SECONDS = TimeUnit.HOURS.toSeconds(2)
+        private val UPDATE_INTERVAL_MILLIS = TimeUnit.HOURS.toMillis(2)
         private val UPDATE_MIN_UPDATE_PROHIBIT_DURATION_SECONDS = TimeUnit.MINUTES.toSeconds(30)
 
         @VisibleForTesting
@@ -68,7 +68,7 @@ open class RatesService(private val context: Context,
                 }
                 .doAfterSuccess { rates: List<Rate>? ->
                     save(rates)
-                    PeriodicUpdateScheduler.scheduleNextUpdate(context, UPDATE_INTERVAL_SECONDS, baseRate.amount, baseRate.shortName.name)
+                    PeriodicUpdateScheduler.scheduleNextUpdate(context, UPDATE_INTERVAL_MILLIS, baseRate.amount, baseRate.shortName.name)
                     lastUpdateDataSource.save(System.currentTimeMillis())
                     dispose()
                 }

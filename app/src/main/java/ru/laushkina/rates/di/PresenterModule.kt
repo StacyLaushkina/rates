@@ -7,7 +7,7 @@ import ru.laushkina.rates.ui.RatesPresenter
 import ru.laushkina.rates.ui.RatesView
 
 @Module(includes = [RatesViewModule::class, ServiceModule::class])
-class ApplicationModule {
+class PresenterModule {
     @Provides
     fun getPresenter(ratesView: RatesView, service: RatesService): RatesPresenter {
         return RatesPresenter(ratesView, service)

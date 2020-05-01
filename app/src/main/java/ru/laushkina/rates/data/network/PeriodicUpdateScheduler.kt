@@ -18,7 +18,7 @@ class PeriodicUpdateScheduler {
                     .putFloat(RatesLoadWorker.BASE_RATE_AMOUNT, amount)
                     .build()
             val mRequest = OneTimeWorkRequest.Builder(RatesLoadWorker::class.java)
-                    .setInitialDelay(initialDelay, TimeUnit.SECONDS)
+                    .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
                     .addTag(RatesLoadWorker.TAG)
                     .setInputData(rate)
                     .build()

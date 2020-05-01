@@ -5,7 +5,7 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import io.reactivex.disposables.Disposable
 import ru.laushkina.rates.di.ContextModule
-import ru.laushkina.rates.di.DaggerApplicationComponent
+import ru.laushkina.rates.di.DaggerServiceComponent
 import ru.laushkina.rates.model.Rate
 import ru.laushkina.rates.model.RateShortName
 import ru.laushkina.rates.util.RatesLog
@@ -29,7 +29,7 @@ class RatesLoadWorker(context: Context, params: WorkerParameters): Worker(contex
 
         RatesLog.d(TAG, "Started downloading rates for: $baseRateShortName")
 
-        val service = DaggerApplicationComponent.builder()
+        val service = DaggerServiceComponent.builder()
                 .contextModule(ContextModule(applicationContext))
                 .build().getRatesService()
 
