@@ -10,6 +10,9 @@ import java.util.concurrent.TimeUnit
 class PeriodicUpdateScheduler {
     companion object {
         fun scheduleNextUpdate(context: Context, initialDelay: Long, amount: Float, shortName: String) {
+            val manager = WorkManager.getInstance(context)
+            manager.cancelAllWorkByTag(RatesLoadWorker.TAG)
+
             val rate = Data.Builder()
                     .putString(RatesLoadWorker.BASE_RATE_SHORT_NAME, shortName)
                     .putFloat(RatesLoadWorker.BASE_RATE_AMOUNT, amount)
@@ -19,7 +22,7 @@ class PeriodicUpdateScheduler {
                     .addTag(RatesLoadWorker.TAG)
                     .setInputData(rate)
                     .build()
-            WorkManager.getInstance(context).enqueue(mRequest)
+            manager.enqueue(mRequest)
         }
     }
 }
