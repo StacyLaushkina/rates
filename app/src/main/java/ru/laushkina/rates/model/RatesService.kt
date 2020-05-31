@@ -8,7 +8,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import ru.laushkina.rates.data.LastUpdateDataSource
 import ru.laushkina.rates.data.RatesDataSource
-import ru.laushkina.rates.data.memory.RatesInMemoryCache
 import ru.laushkina.rates.data.network.PeriodicUpdateScheduler
 import ru.laushkina.rates.data.network.RatesNetworkDataSource
 import ru.laushkina.rates.util.RatesLog

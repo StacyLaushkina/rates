@@ -19,8 +19,8 @@ import java.util.concurrent.TimeUnit
 import kotlin.math.roundToLong
 
 class RateAdapter(@VisibleForTesting val rates: MutableList<RateViewModel>,
-                       private val valueChangeListeners: ValueChangeListener,
-                       private val clickListener: RateClickListener) : RecyclerView.Adapter<RateAdapter.ViewHolder>() {
+                  private val valueChangeListeners: ValueChangeListener,
+                  private val clickListener: RateClickListener) : RecyclerView.Adapter<RateAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater
                 .from(parent.context)
@@ -103,10 +103,11 @@ class RateAdapter(@VisibleForTesting val rates: MutableList<RateViewModel>,
 
     internal class FirstValueTextWatcher(private val listener: ValueChangeListener,
                                          private val viewModel: RateViewModel) : TextWatcher {
-        override fun afterTextChanged(s: Editable) { }
+        override fun afterTextChanged(s: Editable) {}
 
         override fun beforeTextChanged(s: CharSequence, start: Int,
-                                       count: Int, after: Int) { }
+                                       count: Int, after: Int) {
+        }
 
         override fun onTextChanged(s: CharSequence, start: Int,
                                    before: Int, count: Int) {
